@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dis-brands
+  namespace: brands-domain
+  labels:
+    app: dis-brands
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dis-brands
+  template:
+    metadata:
+      labels:
+        app: dis-brands
+    spec:
+      containers:
+      - name: dis-brands
+        image: dis-brands:changeMePlease
+        ports:
+        - containerPort: 8080
+   

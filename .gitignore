@@ -1,0 +1,14 @@
+target
+target/*
+test/.gauge/
+test/logs/
+test/logs/*
+test/reports/
+test/reports/*
+.settings
+.settings/*
+.classpath
+target/
+data
+data/
+data/*
