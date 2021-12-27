@@ -14,9 +14,10 @@ pipeline {
         
            stage('Checkout the code') {
             steps{
-              sh(script: """
-                    git clone https://github.com/saini-navjotk/dis-brands.git
-                """, returnStdout: true) 
+              rm -rf .git
+		cd ..
+		rm -rf dis-brands
+		git clone https://github.com/saini-navjotk/dis-brands.git
             }
         }
 
