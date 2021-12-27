@@ -42,7 +42,7 @@ pipeline {
                 sh script: '''
                 #!/bin/bash
                 cd $WORKSPACE/dis-brands/
-                docker build -t ???/dis-brands:${BUILD_NUMBER} .
+                docker build -t navjotdis/dis-brands:${BUILD_NUMBER} .
                 '''
             }
         }
