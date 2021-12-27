@@ -17,7 +17,6 @@ pipeline {
 	        sh script: '''
 		#!/bin/bash
                 echo "This is start $(pwd)"
-                cd $WORKSPACE/dis-brands/
 		rm -rf .git
 		cd ..
 		rm -rf dis-brands
