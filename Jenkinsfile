@@ -15,7 +15,8 @@ pipeline {
            stage('Checkout the code') {
             steps{
                sh script: '''
-                rm -rf .git
+	       cd ..
+                rm -rf dis-brands
                 '''
             }
         }
