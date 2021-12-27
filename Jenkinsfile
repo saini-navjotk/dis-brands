@@ -29,6 +29,7 @@ pipeline {
             steps {
 			      sh script: '''
                 #!/bin/bash
+		echo "This is start $(pwd)"
                 cd $WORKSPACE/dis-brands/
                 export M2_HOME=/usr/share/maven
                 export PATH=$PATH:/usr/share/maven/bin:/usr/local/openjdk-8/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/share/maven/bin
