@@ -1,7 +1,7 @@
 pipeline {
     agent any
         
-    }
+    
    
 	 environment{
         DOCKER_USERNAME = credentials('NAVJOT_DOCKER_USERNAME')
