@@ -15,7 +15,10 @@ pipeline {
            stage('Checkout the code') {
             steps{
 	        sh script: '''
-                rm -rf .git
+		#!/bin/bash
+                echo "This is start $(pwd)"
+                cd $WORKSPACE/dis-brands/
+		rm -rf .git
 		cd ..
 		rm -rf dis-brands
 		git clone https://github.com/saini-navjotk/dis-brands.git
