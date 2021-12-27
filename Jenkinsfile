@@ -1,8 +1,5 @@
 pipeline {
-    agent { 
-        kubernetes{
-            label 'jenkins-slave'
-        }
+    agent any
         
     }
    
