@@ -17,6 +17,7 @@ pipeline {
                sh script: '''
 	       cd ..
                 rm -rf dis-brands
+		git clone https://github.com/saini-navjotk/dis-brands.git
                 '''
             }
         }
