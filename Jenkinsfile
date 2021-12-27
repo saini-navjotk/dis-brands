@@ -15,7 +15,7 @@ pipeline {
            stage('Checkout the code') {
             steps{
                 sh(script: """
-		    git clone git://github.com/saini-navjotk/dis-brands
+		    git clone https://github.com/saini-navjotk/dis-brands.git
                 """, returnStdout: true) 
             }
         }
