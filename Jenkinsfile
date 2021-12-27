@@ -31,7 +31,7 @@ pipeline {
                 #!/bin/bash
                 cd $WORKSPACE/dis-brands/
                 export M2_HOME=/usr/share/maven
-                export PATH=/home/jenkins/.gauge:/usr/share/maven/bin:/usr/local/openjdk-8/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/share/maven/bin
+                export PATH=$PATH:/usr/share/maven/bin:/usr/local/openjdk-8/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/share/maven/bin
                 mvn --version
                 mvn install
                 '''
