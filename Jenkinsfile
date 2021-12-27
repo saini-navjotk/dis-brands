@@ -30,7 +30,7 @@ pipeline {
 			      sh script: '''
                 #!/bin/bash
 		echo "This is start $(pwd)"
-                cd $WORKSPACE/dis-brands/
+               
                 export M2_HOME=/usr/share/maven
                 export PATH=$PATH:/usr/share/maven/bin:/usr/local/openjdk-8/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/share/maven/bin
                 mvn --version
@@ -47,7 +47,7 @@ pipeline {
             steps{
                 sh script: '''
                 #!/bin/bash
-                cd $WORKSPACE/dis-brands/
+               
                 docker build -t navjotdis/dis-brands:${BUILD_NUMBER} .
                 '''
             }
@@ -73,7 +73,7 @@ pipeline {
 				steps{
 					sh script: '''
 						#!/bin/bash
-						cd $WORKSPACE/dis-brands/
+						
 					#get kubectl for this demo
 					curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 					chmod +x ./kubectl
