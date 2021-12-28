@@ -1,91 +1,47 @@
+---
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: jenkins
 rules:
-- apiGroups:
-  - ""
-  resources:
-  - services
-  - endpoints
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - configmaps
-  verbs:
-  - get
-  - list
-  - watch
-  - update
-  - create
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  verbs:
-  - get
-  - delete
-  - list
-- apiGroups:
-  - ""
-  resources:
-  - events
-  verbs:
-  - create
-  - patch
-- apiGroups:
-  - extensions
-  resources:
-  - ingresses
-  verbs:
-  - list
-  - watch
-  - get
-- apiGroups:
-  - "extensions"
-  resources:
-  - ingresses/status
-  verbs:
-  - update
-- apiGroups:
-  - apps
-  - extensions
-  resources:
-  - deployments
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["create","delete","get","list","patch","update","watch"]
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["create","delete","get","list","patch","update","watch"]
+- apiGroups: [""]
+  resources: ["pods/log"]
+  verbs: ["get","list","watch"]
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["create","delete","get","list","patch","update"]
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["create","delete","get","list","patch","update"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["create","delete","get","list","patch","update"]
+- apiGroups: [""]
+  resources: ["services"]
+  verbs: ["create","delete","get","list","patch","update"]
+- apiGroups: [""]
+  resources: ["ingresses"]
+  verbs: ["create","delete","get","list","patch","update"]
+
 ---
-kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
 metadata:
+  name: jenkins
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
   name: jenkins
 subjects:
 - kind: ServiceAccount
   name: jenkins
   namespace: jenkins
-roleRef:
-  kind: ClusterRole
-  name: jenkins
-  apiGroup: rbac.authorization.k8s.io
   ---
 apiVersion: v1
 kind: ConfigMap
