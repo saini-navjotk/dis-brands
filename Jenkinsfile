@@ -1,12 +1,12 @@
 pipeline {
-   
 	agent { 
         kubernetes{
-            label 'jenkins-slave'
-       
+            label 'jenkins-slave'     
 	}
    
-	 environment{
+     }
+	
+ environment{
         DOCKER_USERNAME = credentials('NAVJOT_DOCKER_USERNAME')
         DOCKER_PASSWORD = credentials('NAVJOT_DOCKER_PASSWORD')
     }
@@ -38,8 +38,7 @@ pipeline {
         }
         
 
-			
-			
+					
 			
          stage('docker build') {
             steps{
