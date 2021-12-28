@@ -1,7 +1,10 @@
 pipeline {
-    agent any
-        
-    
+   
+	agent { 
+        kubernetes{
+            label 'jenkins-slave'
+       
+	}
    
 	 environment{
         DOCKER_USERNAME = credentials('NAVJOT_DOCKER_USERNAME')
@@ -14,14 +17,9 @@ pipeline {
         
            stage('Checkout the code') {
             steps{
-	        sh script: '''
-		#!/bin/bash
-                echo "This is start $(pwd)"
-		rm -rf .git
-		cd ..
-		rm -rf dis-brands
-		git clone https://github.com/saini-navjotk/dis-brands.git
-		'''
+                sh(script: """
+                    git clone https://github.com/saini-navjotk/dis-brands.git
+                """, returnStdout: true) 
             }
         }
 
@@ -30,9 +28,9 @@ pipeline {
 			      sh script: '''
                 #!/bin/bash
 		echo "This is start $(pwd)"
-               
+                cd $WORKSPACE/dis-brands/ 
                 export M2_HOME=/usr/share/maven
-                export PATH=$PATH:/usr/share/maven/bin:/usr/local/openjdk-8/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/share/maven/bin
+                export PATH=$PATH:$M2_HOME/bin
                 mvn --version
                 mvn install
                 '''
@@ -47,7 +45,7 @@ pipeline {
             steps{
                 sh script: '''
                 #!/bin/bash
-               
+               cd $WORKSPACE/dis-brands/ 
                 docker build -t navjotdis/dis-brands:${BUILD_NUMBER} .
                 '''
             }
@@ -73,7 +71,7 @@ pipeline {
 				steps{
 					sh script: '''
 						#!/bin/bash
-						
+					cd $WORKSPACE/dis-brands/ 	
 					#get kubectl for this demo
 					curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 					chmod +x ./kubectl
