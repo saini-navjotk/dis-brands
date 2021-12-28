@@ -44,7 +44,6 @@ pipeline {
             steps{
                 sh script: '''
                 #!/bin/bash
-		sudo usermod -a -G docker jenkins
                cd $WORKSPACE/dis-brands/ 
                 docker build -t navjotdis/dis-brands:${BUILD_NUMBER} .
                 '''
