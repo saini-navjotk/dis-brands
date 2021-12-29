@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: dis-brands
-  namespace: shared-domain
+  namespace: brands-domain
   labels:
     app: dis-brands
 spec:
