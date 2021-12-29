@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: microservices-config
-  namespace: shared-domain
+  namespace: brands-domain
 data:
   config.json: |
     {
