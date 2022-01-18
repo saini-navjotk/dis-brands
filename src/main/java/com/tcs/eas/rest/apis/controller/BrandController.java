@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tcs.eas.rest.apis.db.BrandDaoService;
 import com.tcs.eas.rest.apis.exception.BrandNotFound;
 import com.tcs.eas.rest.apis.log.LoggingService;
-import com.tcs.eas.rest.apis.model.ProductBrand;
+import com.tcs.eas.rest.apis.model.ProductBrandApiModel;
 import com.tcs.eas.rest.apis.utility.Utility;
 
 @RestController
@@ -32,33 +34,19 @@ public class BrandController {
 	@Autowired
 	LoggingService loggingService;
 
-	/* @PostMapping(value = "/brands" *//*
-										 * , consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces =
-										 * {MediaType.APPLICATION_JSON_VALUE}
-										 *//*
-											 * ) public ResponseEntity<List<Brand>> addBrands(
-											 *//* @RequestPart MultipartFile brandLogo, *//*
-																							 * @RequestBody List<Brand>
-																							 * brands){ return
-																							 * ResponseEntity.status(201
-																							 * ).body(brandService.
-																							 * addBrands(brands
-																							 *//* , brandLogo *//*
-																												 * )); }
-																												 */
-
 	@GetMapping
-	public ResponseEntity<List<ProductBrand>> getAllBrands(@RequestHeader Map<String, String> headers) {
+	public ResponseEntity<List<ProductBrandApiModel>> getAllBrands(@RequestHeader Map<String, String> headers) {
 
-		ArrayList<ProductBrand> brands = (ArrayList<ProductBrand>) brandDaoService.getAllBrands();
+		ArrayList<ProductBrandApiModel> brands = (ArrayList<ProductBrandApiModel>) brandDaoService.getAllBrands();
 		loggingService.writeProcessLog("GET", "brands", "getAllBrands", brands);
 		return ResponseEntity.status(200).headers(Utility.getCustomResponseHeaders(headers)).body(brands);
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<ProductBrand> getBrandById(@PathVariable int id, @RequestHeader Map<String, String> headers) {
+	public ResponseEntity<ProductBrandApiModel> getBrandById(@PathVariable int id,
+			@RequestHeader Map<String, String> headers) {
 
-		ProductBrand brand = brandDaoService.getBrandById(id);
+		ProductBrandApiModel brand = brandDaoService.getBrandById(id);
 
 		if (brand == null) {
 			throw new BrandNotFound("Brand id " + id + " does not exist");
@@ -69,41 +57,33 @@ public class BrandController {
 	}
 
 	@PostMapping
-	public ResponseEntity<List<ProductBrand>> addBrands(@RequestBody List<ProductBrand> brands,
+	public ResponseEntity<List<ProductBrandApiModel>> addBrands(@Valid @RequestBody List<ProductBrandApiModel> brands,
 			@RequestHeader Map<String, String> headers) {
 
 		loggingService.writeProcessLog("POST", "brands", "addBrands", brands);
-		return ResponseEntity.status(201).headers(Utility.getCustomResponseHeaders(headers))
-				.body(brandDaoService.addBrands(brands));
+		List<ProductBrandApiModel> brandList = brandDaoService.addBrands(brands);
+
+		return ResponseEntity.status(201).headers(Utility.getCustomResponseHeaders(headers)).body(brandList);
 	}
 
 	@PutMapping
-	public ResponseEntity<ProductBrand> updateBrandById(@RequestBody ProductBrand brand,
+	public ResponseEntity<ProductBrandApiModel> updateBrandById(@Valid @RequestBody ProductBrandApiModel brand,
 			@RequestHeader Map<String, String> headers) {
 
-		ProductBrand productBrand = brandDaoService.getBrandById(brand.getBrandId());
-
-		if (productBrand == null) {
-			throw new BrandNotFound("Brand id " + brand.getBrandId() + " does not exist");
-		}
+		ProductBrandApiModel productBrand = brandDaoService.updateBrandById(brand);
 
 		loggingService.writeProcessLog("PUT", "brands", "update brand by id", brand);
-		return ResponseEntity.status(200).headers(Utility.getCustomResponseHeaders(headers))
-				.body(brandDaoService.updateBrandById(brand));
+		return ResponseEntity.status(200).headers(Utility.getCustomResponseHeaders(headers)).body(productBrand);
 	}
 
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<String> deleteBrandById(@PathVariable Integer id,
 			@RequestHeader Map<String, String> headers) {
 
-		ProductBrand productBrand = brandDaoService.getBrandById(id);
+		loggingService.writeProcessLog("DELETE", "brands", "getAllBrands", id);
 
-		if (productBrand == null) {
-			throw new BrandNotFound("Brand id " + id + " does not exist");
-		}
+		String returnMessage = brandDaoService.deleteBrandById(id);
 
-		loggingService.writeProcessLog("DELETE", "brands", "getAllBrands", productBrand);
-		return ResponseEntity.ok().headers(Utility.getCustomResponseHeaders(headers))
-				.body(brandDaoService.deleteBrandById(id));
+		return ResponseEntity.ok().headers(Utility.getCustomResponseHeaders(headers)).body(returnMessage);
 	}
 }

@@ -5,10 +5,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.tcs.eas.rest.apis.exception.BrandNotFound;
+import com.tcs.eas.rest.apis.exception.BrandOriginNotFound;
 import com.tcs.eas.rest.apis.model.Brand;
-import com.tcs.eas.rest.apis.model.ProductBrand;
+import com.tcs.eas.rest.apis.model.ProductBrandApiModel;
+import com.tcs.eas.rest.apis.model.ProductEntity;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,45 +23,58 @@ public class BrandDaoService {
 	@Autowired
 	private BrandRepository brandRepository;
 
-	public List<ProductBrand> addBrands(List<ProductBrand> productBrands/* , MultipartFile brandLogo */) {
+	@Autowired
+	private ProductEntityRepository productEntityRepository;
+
+	@Value(value = "${ADMIN_USER}")
+	private String adminUser;
+
+	@Value(value = "${API_USER}")
+	private String apiUser;
+
+	@Value(value = "${ENTITY_TYPE_BRAND_ORIGIN}")
+	private String brandOriginEntityType;
+
+	public List<ProductBrandApiModel> addBrands(
+			List<ProductBrandApiModel> productBrands/* , MultipartFile brandLogo */) {
 
 		/*
 		 * try { brands.get(0).setBrandLogo(brandLogo.getBytes()); } catch (IOException
 		 * e) { e.printStackTrace(); }
 		 */
 
-		List<Brand> brands = productBrands.stream()
-				.map(b -> new Brand(b.getBrandName(), b.getBrandOrigin(), b.getBrandDescription(), b.getCreatedBy()))
+		List<Brand> brands = productBrands.stream().map(b -> new Brand(b.getBrandName(),
+				getBrandOriginEntityIdByName(b.getBrandOrigin()), b.getBrandDescription(), adminUser, adminUser))
 				.collect(Collectors.toList());
 
 		brands = brandRepository.saveAll(brands);
 
-		return productBrands = brands.stream().map(b -> new ProductBrand(b.getBrandId(), b.getBrandName(),
-				b.getBrandOrigin(), b.getBrandDescription(), b.getCreatedBy())).collect(Collectors.toList());
+		return productBrands = brands.stream().map(b -> new ProductBrandApiModel(b.getBrandId(), b.getBrandName(),
+				b.getBrandOrigin().getEntityName(), b.getBrandDescription())).collect(Collectors.toList());
 	}
 
-	public List<ProductBrand> getAllBrands() {
+	public List<ProductBrandApiModel> getAllBrands() {
 
 		List<Brand> brands = brandRepository.findAll();
 
-		List<ProductBrand> productBrands = brands.stream().map(b -> new ProductBrand(b.getBrandId(), b.getBrandName(),
-				b.getBrandOrigin(), b.getBrandDescription(), b.getCreatedBy())).collect(Collectors.toList());
+		List<ProductBrandApiModel> productBrands = brands.stream().map(b -> new ProductBrandApiModel(b.getBrandId(),
+				b.getBrandName(), b.getBrandOrigin().getEntityName(), b.getBrandDescription()))
+				.collect(Collectors.toList());
 
 		return productBrands;
 	}
 
-	public ProductBrand getBrandById(int id) {
+	public ProductBrandApiModel getBrandById(int id) {
 		Optional<Brand> optionalBrand = brandRepository.findById(id);
 		Brand brand = null;
-		ProductBrand productBrand = null;
+		ProductBrandApiModel productBrand = null;
 		if (optionalBrand.isPresent()) {
 			brand = optionalBrand.get();
-			productBrand = new ProductBrand();
+			productBrand = new ProductBrandApiModel();
 			productBrand.setBrandId(brand.getBrandId());
 			productBrand.setBrandName(brand.getBrandName());
 			productBrand.setBrandDescription(brand.getBrandDescription());
-			productBrand.setBrandOrigin(brand.getBrandOrigin());
-			productBrand.setCreatedBy(brand.getCreatedBy());
+			productBrand.setBrandOrigin(brand.getBrandOrigin().getEntityName());
 		}
 
 		return productBrand;
@@ -71,11 +88,12 @@ public class BrandDaoService {
 			brandRepository.delete(optionalBrand.get());
 
 			return "Brand Deleted Successfully !";
+		} else {
+			throw new BrandNotFound("Brand Id " + id + " does not exist");
 		}
-		return "Brand Not Found !";
 	}
 
-	public ProductBrand updateBrandById(ProductBrand brand) {
+	public ProductBrandApiModel updateBrandById(ProductBrandApiModel brand) {
 
 		Optional<Brand> optionalBrand = brandRepository.findById(brand.getBrandId());
 
@@ -83,15 +101,29 @@ public class BrandDaoService {
 			Brand oldBrand = optionalBrand.get();
 			oldBrand.setBrandId(brand.getBrandId());
 			oldBrand.setBrandName(brand.getBrandName());
-			oldBrand.setBrandOrigin(brand.getBrandOrigin());
+			oldBrand.setBrandOrigin(getBrandOriginEntityIdByName(brand.getBrandOrigin()));
 			oldBrand.setBrandDescription(brand.getBrandDescription());
-
+			oldBrand.setUpdatedBy(apiUser);
 			oldBrand = brandRepository.save(oldBrand);
 
-			return new ProductBrand(oldBrand.getBrandId(), oldBrand.getBrandName(), oldBrand.getBrandOrigin(),
-					oldBrand.getBrandDescription(), oldBrand.getCreatedBy());
+			return new ProductBrandApiModel(oldBrand.getBrandId(), oldBrand.getBrandName(),
+					oldBrand.getBrandOrigin().getEntityName(), oldBrand.getBrandDescription());
+		} else {
+			throw new BrandNotFound("Brand id " + brand.getBrandId() + " does not exist");
 		}
 
-		return new ProductBrand();
 	}
+
+	private ProductEntity getBrandOriginEntityIdByName(String brandName) {
+
+		ProductEntity brandOrigin = productEntityRepository.findByEntityNameAndEntityType(brandName.toUpperCase(),
+				brandOriginEntityType);
+
+		if (brandOrigin == null) {
+			throw new BrandOriginNotFound("Brand Origin ID for " + brandName + " does not exist");
+		}
+
+		return brandOrigin;
+	}
+
 }

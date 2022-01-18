@@ -48,6 +48,18 @@ public class CustomErrorHandler extends ResponseEntityExceptionHandler implement
 		return getResponseEntity(request, HttpStatus.NOT_FOUND, ex, null);
 	}
 
+	/**
+	 * 
+	 * @param ex
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@ExceptionHandler(BrandOriginNotFound.class)
+	public ResponseEntity<Object> brandOriginNotFoundException(Exception ex, WebRequest request) throws Exception {
+		return getResponseEntity(request, HttpStatus.NOT_FOUND, ex, null);
+	}
+
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
