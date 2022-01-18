@@ -13,7 +13,7 @@ public class BrandManagementSystemApplication {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		SpringApplication.run(BrandManagementSystemApplication.class, args);
+		SpringApplication.run(BrandManagementSystemApplication.class, args); 
 	}
 	@Bean
 	public WebMvcConfigurer configurer(){
