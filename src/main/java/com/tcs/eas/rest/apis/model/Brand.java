@@ -7,98 +7,58 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import io.swagger.annotations.ApiModel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 //@Data
 //@NoArgsConstructor
 //@AllArgsConstructor
-//@ApiModel
 @Entity(name = "brand")
 public class Brand {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "brandid")
 	private int brandId;
 
-	@Column(unique = true)
+	@Column(unique = true, name = "brandname")
 	@NotNull(message = "brand name field is missing")
 	@Size(min = 2, message = "minimum 2 characters are required for brand name")
 	private String brandName;
 
-	@NotNull(message = "brand origin field is missing")
-	@Size(min = 2, message = "minimum 2 characters are required for brand name")
-	private String brandOrigin;
-
 	@NotNull(message = "brand description field is missing")
 	@Size(min = 2, message = "minimum 10 characters are required for brand description")
+	@Column(name = "branddescription")
 	private String brandDescription;
 
-	@Column
+	@Column(name = "createdby")
 	@NotNull(message = "created by field is missing")
 	private String createdBy;
 
-	@Column
+	@Column(name = "createtimestamp")
 	private Date createdTimestamp;
 
-	@Column
+	@Column(name = "updatedby")
+	@NotNull(message = "updated by field is missing")
+	private String updatedBy;
+
+	@Column(name = "updatedtimestamp")
 	private Date updatedTimestamp;
 
 	/*
 	 * @Lob private byte[] brandLogo;
 	 */
 
-	/**
-	 * @param brandName
-	 * @param brandOrigin
-	 * @param brandDescription
-	 * @param createdBy
-	 */
-	public Brand(
-			@NotNull(message = "brand name field is missing") @Size(min = 2, message = "minimum 2 characters are required for brand name") String brandName,
-			@NotNull(message = "brand origin field is missing") @Size(min = 2, message = "minimum 2 characters are required for brand name") String brandOrigin,
-			@NotNull(message = "brand description field is missing") @Size(min = 2, message = "minimum 10 characters are required for brand description") String brandDescription,
-			@NotNull(message = "created by field is missing") String createdBy) {
-		super();
-		this.brandName = brandName;
-		this.brandOrigin = brandOrigin;
-		this.brandDescription = brandDescription;
-		this.createdBy = createdBy;
-	}
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "brandorigin", referencedColumnName = "productEntityId")
+	private ProductEntity brandOrigin;
 
 	/**
 	 * 
 	 */
-	public Brand() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @param brandId
-	 * @param brandName
-	 * @param brandOrigin
-	 * @param brandDescription
-	 * @param createdBy
-	 */
-	public Brand(int brandId,
-			@NotNull(message = "brand name field is missing") @Size(min = 2, message = "minimum 2 characters are required for brand name") String brandName,
-			@NotNull(message = "brand origin field is missing") @Size(min = 2, message = "minimum 2 characters are required for brand name") String brandOrigin,
-			@NotNull(message = "brand description field is missing") @Size(min = 2, message = "minimum 10 characters are required for brand description") String brandDescription,
-			@NotNull(message = "created by field is missing") String createdBy) {
-		super();
-		this.brandId = brandId;
-		this.brandName = brandName;
-		this.brandOrigin = brandOrigin;
-		this.brandDescription = brandDescription;
-		this.createdBy = createdBy;
-	}
 
 	@PrePersist
 	void createdAt() {
@@ -121,11 +81,11 @@ public class Brand {
 		this.brandName = brandName;
 	}
 
-	public String getBrandOrigin() {
+	public ProductEntity getBrandOrigin() {
 		return brandOrigin;
 	}
 
-	public void setBrandOrigin(String brandOrigin) {
+	public void setBrandOrigin(ProductEntity brandOrigin) {
 		this.brandOrigin = brandOrigin;
 	}
 
@@ -159,6 +119,63 @@ public class Brand {
 
 	public void setUpdatedTimestamp(Date updatedTimestamp) {
 		this.updatedTimestamp = updatedTimestamp;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public Brand() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @param brandId
+	 * @param brandName
+	 * @param brandOrigin
+	 * @param brandDescription
+	 * @param createdBy
+	 * @param updatedBy
+	 */
+	public Brand(int brandId,
+			@NotNull(message = "brand name field is missing") @Size(min = 2, message = "minimum 2 characters are required for brand name") String brandName,
+			@NotNull(message = "brand origin field is missing") ProductEntity brandOrigin,
+			@NotNull(message = "brand description field is missing") @Size(min = 2, message = "minimum 10 characters are required for brand description") String brandDescription,
+			@NotNull(message = "created by field is missing") String createdBy,
+			@NotNull(message = "updated by field is missing") String updatedBy) {
+		super();
+		this.brandId = brandId;
+		this.brandName = brandName;
+		this.brandOrigin = brandOrigin;
+		this.brandDescription = brandDescription;
+		this.createdBy = createdBy;
+		this.updatedBy = updatedBy;
+	}
+
+	/**
+	 * @param brandName
+	 * @param brandOrigin
+	 * @param brandDescription
+	 * @param createdBy
+	 * @param updatedBy
+	 */
+	public Brand(
+			@NotNull(message = "brand name field is missing") @Size(min = 2, message = "minimum 2 characters are required for brand name") String brandName,
+			@NotNull(message = "brand origin field is missing") ProductEntity brandOrigin,
+			@NotNull(message = "brand description field is missing") @Size(min = 2, message = "minimum 10 characters are required for brand description") String brandDescription,
+			@NotNull(message = "created by field is missing") String createdBy,
+			@NotNull(message = "updated by field is missing") String updatedBy) {
+		super();
+		this.brandName = brandName;
+		this.brandOrigin = brandOrigin;
+		this.brandDescription = brandDescription;
+		this.createdBy = createdBy;
+		this.updatedBy = updatedBy;
 	}
 
 }
