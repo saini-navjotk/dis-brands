@@ -12,3 +12,5 @@ target/
 data
 data/
 data/*
+/target\generated-sources\annotations/
+/target\generated-test-sources\test-annotations/
