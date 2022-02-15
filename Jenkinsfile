@@ -32,6 +32,7 @@ pipeline {
                 export M2_HOME=/usr/share/maven
                 export PATH=$PATH:$M2_HOME/bin
                 mvn --version
+                mvn install:install-file -Dfile=./KafkaService.jar -DgroupId=org.tcs.dis -DartifactId=dis-kafka -Dversion=1.0-SNAPSHOT -Dpackaging=jar
                 mvn install
                 '''
               }
