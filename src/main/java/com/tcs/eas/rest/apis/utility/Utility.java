@@ -2,6 +2,7 @@ package com.tcs.eas.rest.apis.utility;
 
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,8 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tcs.dis.DisEntity;
+import com.tcs.dis.KafkaPublish;
 import com.tcs.eas.rest.apis.Constants;
+import com.tcs.eas.rest.apis.model.ProductBrandApiModel;
 
 /**
  * 
@@ -77,6 +82,19 @@ public class Utility implements Constants {
 		}
 
 		return responseHeaders;
+	}
+	
+	public static void sendToKafka(ProductBrandApiModel brand) {
+		KafkaPublish publish = new KafkaPublish();
+		ObjectMapper mapper = new ObjectMapper();
+		publish.send(DisEntity.CART, mapper.convertValue(brand, JsonNode.class));
+	}
+
+	public static void sendToKafka(List<ProductBrandApiModel> brandList) {
+		KafkaPublish publish = new KafkaPublish();
+		ObjectMapper mapper = new ObjectMapper();
+		publish.send(DisEntity.CART, mapper.convertValue(brandList, JsonNode.class));
+		
 	}
 
 }

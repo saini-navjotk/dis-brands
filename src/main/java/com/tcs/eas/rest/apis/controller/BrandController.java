@@ -62,6 +62,7 @@ public class BrandController {
 
 		loggingService.writeProcessLog("POST", "brands", "addBrands", brands);
 		List<ProductBrandApiModel> brandList = brandDaoService.addBrands(brands);
+		 Utility.sendToKafka(brandList);
 
 		return ResponseEntity.status(201).headers(Utility.getCustomResponseHeaders(headers)).body(brandList);
 	}
@@ -71,7 +72,7 @@ public class BrandController {
 			@RequestHeader Map<String, String> headers) {
 
 		ProductBrandApiModel productBrand = brandDaoService.updateBrandById(brand);
-
+		 Utility.sendToKafka(productBrand);
 		loggingService.writeProcessLog("PUT", "brands", "update brand by id", brand);
 		return ResponseEntity.status(200).headers(Utility.getCustomResponseHeaders(headers)).body(productBrand);
 	}
