@@ -87,13 +87,13 @@ public class Utility implements Constants {
 	public static void sendToKafka(ProductBrandApiModel brand) {
 		KafkaPublish publish = new KafkaPublish();
 		ObjectMapper mapper = new ObjectMapper();
-		publish.send(DisEntity.CART, mapper.convertValue(brand, JsonNode.class));
+		publish.send(DisEntity.BRANDS, mapper.convertValue(brand, JsonNode.class));
 	}
 
 	public static void sendToKafka(List<ProductBrandApiModel> brandList) {
 		KafkaPublish publish = new KafkaPublish();
 		ObjectMapper mapper = new ObjectMapper();
-		publish.send(DisEntity.CART, mapper.convertValue(brandList, JsonNode.class));
+		publish.send(DisEntity.BRANDS, mapper.convertValue(brandList, JsonNode.class));
 		
 	}
 
