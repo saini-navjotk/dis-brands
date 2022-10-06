@@ -1,0 +1,78 @@
+# Maven
+# Build your Java project and run tests with Apache Maven.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: ArtifactoryGenericDownload@3
+  inputs:
+    connection: 'jfrog_artifactory'
+    specSource: 'taskConfiguration'
+    fileSpec: |
+      {
+        "files": [
+          {
+            "pattern": "dis-libs-release-local/KafkaService.jar",
+            "target": "/home/vsts/work/1/s/"
+          }
+        ]
+      }
+    failNoOp: true
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'install:install-file'
+    options: '-Dfile=./KafkaService.jar -DgroupId=org.tcs.dis -DartifactId=dis-kafka -Dversion=1.0-SNAPSHOT -Dpackaging=jar'
+    publishJUnitResults: false
+    javaHomeOption: 'JDKVersion'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'install'
+    publishJUnitResults: false
+    javaHomeOption: 'JDKVersion'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false
+- task: CopyFiles@2
+  inputs:
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: $(Build.ArtifactStagingDirectory)
+    artifactName: 'drop'
+- task: ArtifactoryGenericUpload@2
+  inputs:
+    artifactoryService: 'jfrog_artifactory'
+    specSource: 'taskConfiguration'
+    fileSpec: |
+            {
+              "files": [
+                        {
+                        "pattern": "$(Pipeline.Workspace)/*.jar",
+                         "target": "dis-libs-release-local"
+                       }
+                       ]
+              }
+    collectBuildInfo: true
+    buildName: '$(Build.DefinitionName)'
+    buildNumber: '$(Build.BuildNumber)'
+    failNoOp: true
+- task: Docker@2
+  inputs:
+    containerRegistry: 'manidockerhub'
+    repository: 'manisaurabh2020/dis-brands'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
