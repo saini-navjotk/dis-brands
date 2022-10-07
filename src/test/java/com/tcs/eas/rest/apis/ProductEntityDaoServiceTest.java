@@ -2,9 +2,10 @@ package com.tcs.eas.rest.apis;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.when;
-
+import static org.mockito.Mockito.doReturn;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +23,7 @@ import org.mockito.quality.Strictness;
 
 import com.tcs.eas.rest.apis.db.ProductEntityDaoService;
 import com.tcs.eas.rest.apis.db.ProductEntityRepository;
+import com.tcs.eas.rest.apis.model.Brand;
 import com.tcs.eas.rest.apis.model.ProductEntity;
 import com.tcs.eas.rest.apis.model.ProductEntityApiModel;
 
@@ -80,7 +82,7 @@ class ProductEntityDaoServiceTest {
 	
 	@Test
 	 void addProductEntity() {
-	when(productEntityRepository.save(prodEntity)).thenReturn(prodEntity);
+	doReturn(prodEntity).when(productEntityRepository).save(any((ProductEntity.class)));
 	ProductEntityApiModel prodEntity2  = productEntityDaoService.addProductEntity(new ProductEntityApiModel(prodEntity));
 	assertThat(prodEntity2).isNotNull();
 	}
@@ -95,11 +97,14 @@ class ProductEntityDaoServiceTest {
 	}
 	
 	@Test
+	@MockitoSettings(strictness = Strictness.LENIENT)
 	 void updateProductEntityById() {
 		when(productEntityRepository.findById(100)).thenReturn(Optional.of(prodEntity));	
-		when(productEntityRepository.save(prodEntity)).thenReturn(prodEntity);
+		//when(productEntityRepository.save(prodEntity)).thenReturn(prodEntity);
+		doReturn(prodEntity).when(productEntityRepository).save(any((ProductEntity.class)));
+		
 		prodEntity.setEntityType("Test");
-		ProductEntityApiModel prodEntity2  = productEntityDaoService.updateProductEntityById(prodEntity);
+		ProductEntityApiModel prodEntity2  = productEntityDaoService.updateProductEntityById(new ProductEntityApiModel(prodEntity));
 		assertThat(prodEntity2.getEntityType()).isEqualTo("Test");
 	}
 	
@@ -118,6 +123,7 @@ class ProductEntityDaoServiceTest {
 		prodEntity2.setUpdatedTimestamp(new Date());
 		prodEntity2.setUpdatedBy("Admin");
 		
+		when(productEntityRepository.findById(100)).thenReturn(Optional.of(prodEntity2));	
 		 willDoNothing().given(productEntityRepository).deleteById(100);
 		
 		String result  = productEntityDaoService.deleteEntityById(100);
