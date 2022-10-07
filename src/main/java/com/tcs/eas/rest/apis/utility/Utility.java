@@ -26,7 +26,7 @@ import com.tcs.eas.rest.apis.model.ProductBrandApiModel;
 public class Utility {
 	private Utility() {
 		super();
-		// TODO Auto-generated constructor stub
+	
 	}
 
 	/**

@@ -22,7 +22,6 @@ import com.tcs.eas.rest.apis.Constants;
 import com.tcs.eas.rest.apis.db.ProductEntityDaoService;
 import com.tcs.eas.rest.apis.exception.BrandNotFound;
 import com.tcs.eas.rest.apis.log.LoggingService;
-import com.tcs.eas.rest.apis.model.ProductEntity;
 import com.tcs.eas.rest.apis.model.ProductEntityApiModel;
 import com.tcs.eas.rest.apis.utility.Utility;
 
