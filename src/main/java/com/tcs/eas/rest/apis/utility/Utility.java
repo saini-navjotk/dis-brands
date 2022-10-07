@@ -18,11 +18,7 @@ import com.tcs.eas.rest.apis.Constants;
 import com.tcs.eas.rest.apis.model.Brand;
 import com.tcs.eas.rest.apis.model.ProductBrandApiModel;
 
-/**
- * 
- * @author 44745
- *
- */
+
 public class Utility {
 	private Utility() {
 		super();
