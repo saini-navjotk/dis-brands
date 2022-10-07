@@ -34,6 +34,7 @@ steps:
   inputs:
     mavenPomFile: 'pom.xml'
     goals: 'clean verify sonar:sonar'
+    options: '-Dfile=./KafkaService.jar -DgroupId=org.tcs.dis -DartifactId=dis-kafka -Dversion=1.0-SNAPSHOT -Dpackaging=jar'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     codeCoverageToolOption: JaCoCo
