@@ -99,7 +99,7 @@ public class Utility {
 	public static void sendToKafka(List<ProductBrandApiModel> brandList) {
 		KafkaPublish publish = new KafkaPublish();
 		ObjectMapper mapper = new ObjectMapper();
-		publish.send(DisEntity.BRANDS, mapper.convertValue(brandList, JsonNode.class));
+		publish.send(DisEntity.BRANDS, mapper.convertValue(brandList, JsonNode.class)); 
 		
 	}
 
