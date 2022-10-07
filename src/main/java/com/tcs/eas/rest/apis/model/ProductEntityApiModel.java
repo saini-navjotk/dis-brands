@@ -19,32 +19,25 @@ public class ProductEntityApiModel {
 
 	private int productEntityId;
 
-	@Column(unique = false, name = "entitytype")
+	
 	@NotNull(message = "entity type field is missing")
 	@Size(min = 2, message = "minimum 2 characters are required for entity type")
 	private String entityType;
 
 	@NotNull(message = "entity name field is missing")
-	@Column(unique = false, name = "entityname")
 	private String entityName;
 
 	@Size(min = 5, message = "minimum 5 characters are required for brand description")
-	@Column(name = "enitydescription")
 	private String entityDescription;
 
-	@Column(name = "createdby")
 	private String createdBy;
 
-	@Column(name = "createdtimestamp")
 	private Date createdTimestamp;
 
-	@Column(name = "updatedby")
 	private String updatedBy;
 
-	@Column(name = "updatedtimestamp")
 	private Date updatedTimestamp;
 
-	@Column(name = "status")
 	private String status;
 
 	/**

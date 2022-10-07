@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.tcs.eas.rest.apis.model.ProductBrandApiModel;
 import com.tcs.eas.rest.apis.model.ProductEntity;
 import com.tcs.eas.rest.apis.model.ProductEntityApiModel;
 
