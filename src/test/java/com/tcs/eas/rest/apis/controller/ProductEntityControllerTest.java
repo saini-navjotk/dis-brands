@@ -1,7 +1,6 @@
 package com.tcs.eas.rest.apis.controller;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -32,7 +31,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tcs.eas.rest.apis.db.ProductEntityDaoService;
 import com.tcs.eas.rest.apis.log.LoggingService;
-import com.tcs.eas.rest.apis.model.ProductBrandApiModel;
 import com.tcs.eas.rest.apis.model.ProductEntity;
 
 @ExtendWith(MockitoExtension.class)
@@ -175,9 +173,9 @@ class ProductEntityControllerTest {
 				        						.content(jsonProductEntity.write(productEntity1).getJson()));//.andReturn().getResponse();
 				        
 		// then - verify the output
-		
 		response.andExpect(status().isOk())
 			 .andDo(print());
+
 	}
 	
 	@Test
