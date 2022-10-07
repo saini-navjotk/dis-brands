@@ -23,7 +23,7 @@ public class KeyGenerator implements IdentifierGenerator {
 			try {
 				return getRandomNumberString();
 			} catch (NoSuchAlgorithmException e) {
-				e.printStackTrace();
+				
 				
 			}
 			return session;
