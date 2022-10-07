@@ -24,6 +24,23 @@ steps:
         ]
       }
     failNoOp: true
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'SonarScan'
+    organization: 'saini-navjotk'
+    scannerMode: 'Other'
+
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'clean verify sonar:sonar'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    codeCoverageToolOption: JaCoCo
+    javaHomeOption: 'JDKVersion'
+
+- task: SonarCloudAnalyze@1
+- task: SonarCloudPublish@1
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
@@ -36,6 +53,7 @@ steps:
     effectivePomSkip: false
     sonarQubeRunAnalysis: false
 - task: Maven@3
+
   inputs:
     mavenPomFile: 'pom.xml'
     goals: 'install'
