@@ -3,12 +3,15 @@ package com.tcs.eas.rest.apis.db;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.tcs.eas.rest.apis.model.ProductBrandApiModel;
 import com.tcs.eas.rest.apis.model.ProductEntity;
+import com.tcs.eas.rest.apis.model.ProductEntityApiModel;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,34 +28,38 @@ public class ProductEntityDaoService {
 	@Value(value = "${API_USER}")
 	private String apiUser;
 
-	public ProductEntity addProductEntity(ProductEntity productEntity) {
-
+	public ProductEntityApiModel addProductEntity(ProductEntityApiModel productEntityApiModel) {
+		ProductEntity productEntity = new ProductEntity(productEntityApiModel);
 		productEntity.setCreatedBy(adminUser);
 		productEntity.setCreatedTimestamp(new Date());
 		productEntity.setUpdatedBy(adminUser);
 		productEntity.setUpdatedTimestamp(new Date());
 		productEntity.setStatus("A");
-		productEntity.setEntityName(productEntity.getEntityName().toUpperCase());
+		productEntity.setEntityName(productEntityApiModel.getEntityName().toUpperCase());
 
-		return productEntityRepository.save(productEntity);
+		return new ProductEntityApiModel( productEntityRepository.save(productEntity));
 
 	}
 
-	public List<ProductEntity> getAllProductEntity() {
+	public List<ProductEntityApiModel> getAllProductEntity() {
 
-		return productEntityRepository.findAll();
+		List<ProductEntity> productEntities = productEntityRepository.findAll();
+		return productEntities.stream().map(b -> new ProductEntityApiModel(b.getProductEntityId(), 
+				 b.getEntityType(), b.getEntityName(), b.getEntityDescription(), b.getStatus()))
+				.collect(Collectors.toList());
 
 		
 	}
 
-	public ProductEntity getProductEntityById(int id) {
+	public ProductEntityApiModel getProductEntityById(int id) {
 		Optional<ProductEntity> optionalEntity = productEntityRepository.findById(id);
 		ProductEntity entity = null;
-
+		ProductEntityApiModel model = null;
 		if (optionalEntity.isPresent()) {
 			entity = optionalEntity.get();
+			model = new ProductEntityApiModel(entity);
 		}
-		return entity;
+		return model;
 	}
 
 	public String deleteEntityById(Integer id) {
@@ -67,23 +74,20 @@ public class ProductEntityDaoService {
 		return "Entity Not Found !";
 	}
 
-	public ProductEntity updateProductEntityById(ProductEntity productEntity) {
+	public ProductEntityApiModel updateProductEntityById(ProductEntityApiModel productEntity) {
 
-		ProductEntity oldEntity = getProductEntityById(productEntity.getProductEntityId());
+		ProductEntityApiModel oldEntity = getProductEntityById(productEntity.getProductEntityId());
 
 		if (oldEntity != null) {
 			
-			oldEntity.setEntityType(productEntity.getEntityType());
-			oldEntity.setEntityName(productEntity.getEntityName().toUpperCase());
-			oldEntity.setEntityDescription(productEntity.getEntityDescription());
-			oldEntity.setUpdatedBy(adminUser);
-			oldEntity.setUpdatedTimestamp(new Date());
-			oldEntity = productEntityRepository.save(oldEntity);
+			
+			productEntity.setUpdatedTimestamp(new Date());
+			new ProductEntityApiModel( productEntityRepository.save(new ProductEntity(productEntity)));
 
 			return oldEntity;
 		}
 
-		return new ProductEntity();
+		return new ProductEntityApiModel();
 	}
 
 }

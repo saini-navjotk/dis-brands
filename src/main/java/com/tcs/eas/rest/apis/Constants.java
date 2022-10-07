@@ -3,7 +3,9 @@ package com.tcs.eas.rest.apis;
 
 public class Constants {
 	
-	
+	private Constants() {
+		throw new IllegalStateException("Utility class");
+	}
 	/**
 	 * 
 	 */
@@ -145,4 +147,6 @@ public class Constants {
 	public static final String PRODUCT_ENTITY = "productentity";
 	
 	public static final String PROCESSING_DETAILS = "Processing details: " ;
+	
+	public static final String CALL_FOR = " call for";
 }

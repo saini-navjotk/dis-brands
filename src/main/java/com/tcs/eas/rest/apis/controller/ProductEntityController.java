@@ -23,6 +23,7 @@ import com.tcs.eas.rest.apis.db.ProductEntityDaoService;
 import com.tcs.eas.rest.apis.exception.BrandNotFound;
 import com.tcs.eas.rest.apis.log.LoggingService;
 import com.tcs.eas.rest.apis.model.ProductEntity;
+import com.tcs.eas.rest.apis.model.ProductEntityApiModel;
 import com.tcs.eas.rest.apis.utility.Utility;
 
 @RestController
@@ -36,18 +37,18 @@ public class ProductEntityController {
 	LoggingService loggingService;
 
 	@GetMapping
-	public ResponseEntity<List<ProductEntity>> getAllProductEntity(@RequestHeader Map<String, String> headers) {
+	public ResponseEntity<List<ProductEntityApiModel>> getAllProductEntity(@RequestHeader Map<String, String> headers) {
 
-		ArrayList<ProductEntity> entities = (ArrayList<ProductEntity>) productEntityDaoService.getAllProductEntity();
+		ArrayList<ProductEntityApiModel> entities = (ArrayList<ProductEntityApiModel>) productEntityDaoService.getAllProductEntity();
 		loggingService.writeProcessLog(Constants.HTTP_METHOD_GET, Constants.PRODUCT_ENTITY, "getAllProductEntity", entities);
 		return ResponseEntity.status(200).headers(Utility.getCustomResponseHeaders(headers)).body(entities);
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<ProductEntity> getProductEntityById(@PathVariable int id,
+	public ResponseEntity<ProductEntityApiModel> getProductEntityById(@PathVariable int id,
 			@RequestHeader Map<String, String> headers) {
 
-		ProductEntity entity = productEntityDaoService.getProductEntityById(id);
+		ProductEntityApiModel entity = productEntityDaoService.getProductEntityById(id);
 
 		if (entity == null) {
 			throw new BrandNotFound("Entity id " + id + Constants.DOES_NOT_EXIST);
@@ -58,7 +59,7 @@ public class ProductEntityController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ProductEntity> addProductEntity(@Valid @RequestBody ProductEntity entity,
+	public ResponseEntity<ProductEntityApiModel> addProductEntity(@Valid @RequestBody ProductEntityApiModel entity,
 			@RequestHeader Map<String, String> headers) {
 
 		loggingService.writeProcessLog("POST", "productentity", "addProductEntity", entity);
@@ -67,10 +68,10 @@ public class ProductEntityController {
 	}
 
 	@PutMapping
-	public ResponseEntity<ProductEntity> updateProductEntityById(@Valid @RequestBody ProductEntity entity,
+	public ResponseEntity<ProductEntityApiModel> updateProductEntityById(@Valid @RequestBody ProductEntity entity,
 			@RequestHeader Map<String, String> headers) {
 
-		ProductEntity productEntity = productEntityDaoService.getProductEntityById(entity.getProductEntityId());
+		ProductEntityApiModel productEntity = productEntityDaoService.getProductEntityById(entity.getProductEntityId());
 
 		if (productEntity == null) {
 			throw new BrandNotFound("productEntity id " + entity.getProductEntityId() + Constants.DOES_NOT_EXIST);
@@ -85,7 +86,7 @@ public class ProductEntityController {
 	public ResponseEntity<String> deleteProductEntityById(@PathVariable Integer id,
 			@RequestHeader Map<String, String> headers) {
 
-		ProductEntity entity = productEntityDaoService.getProductEntityById(id);
+		ProductEntityApiModel entity = productEntityDaoService.getProductEntityById(id);
 
 		if (entity == null) {
 			throw new BrandNotFound("Product Entity id " + id + Constants.DOES_NOT_EXIST);

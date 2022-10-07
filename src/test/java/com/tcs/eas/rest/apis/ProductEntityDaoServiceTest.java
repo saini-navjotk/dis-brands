@@ -23,6 +23,7 @@ import org.mockito.quality.Strictness;
 import com.tcs.eas.rest.apis.db.ProductEntityDaoService;
 import com.tcs.eas.rest.apis.db.ProductEntityRepository;
 import com.tcs.eas.rest.apis.model.ProductEntity;
+import com.tcs.eas.rest.apis.model.ProductEntityApiModel;
 
 @ExtendWith(MockitoExtension.class)
 class ProductEntityDaoServiceTest {
@@ -36,7 +37,7 @@ class ProductEntityDaoServiceTest {
 	private ProductEntity prodEntity ;
 	
 	  @BeforeEach
-			public void setup() {
+			 void setup() {
 				MockitoAnnotations.openMocks(this);
 				 prodEntity = new ProductEntity();
 				prodEntity.setProductEntityId(100);
@@ -51,7 +52,7 @@ class ProductEntityDaoServiceTest {
 			}
 	  
 	@Test
-	public void getAllProductEntity() {
+	 void getAllProductEntity() {
 		List<ProductEntity> entityList = new ArrayList<ProductEntity>();
 		
 		entityList.add(prodEntity);
@@ -72,41 +73,39 @@ class ProductEntityDaoServiceTest {
 		when(productEntityRepository.findAll()).thenReturn(entityList);
 		
 		//test
-	  	List<ProductEntity> list = productEntityDaoService.getAllProductEntity();
+	  	List<ProductEntityApiModel> list = productEntityDaoService.getAllProductEntity();
 	  	assertEquals(2, list.size());
        assertThat(list.get(1).getEntityName().equalsIgnoreCase("Brand"));
 	}
 	
 	@Test
-	public void addProductEntity() {
-		
-		
+	 void addProductEntity() {
 	when(productEntityRepository.save(prodEntity)).thenReturn(prodEntity);
-	ProductEntity prodEntity2  = productEntityDaoService.addProductEntity(prodEntity);
+	ProductEntityApiModel prodEntity2  = productEntityDaoService.addProductEntity(new ProductEntityApiModel(prodEntity));
 	assertThat(prodEntity2).isNotNull();
 	}
 	
 	@Test
-	public void getProductEntityById() {
+	 void getProductEntityById() {
 		
 		when(productEntityRepository.findById(100)).thenReturn(Optional.of(prodEntity));	
 	
-	ProductEntity prodEntity2  = productEntityDaoService.getProductEntityById(100);
+		ProductEntityApiModel prodEntity2  = productEntityDaoService.getProductEntityById(100);
 	assertThat(prodEntity2).isNotNull();
 	}
 	
 	@Test
-	public void updateProductEntityById() {
+	 void updateProductEntityById() {
 		when(productEntityRepository.findById(100)).thenReturn(Optional.of(prodEntity));	
 		when(productEntityRepository.save(prodEntity)).thenReturn(prodEntity);
 		prodEntity.setEntityType("Test");
-		ProductEntity prodEntity2  = productEntityDaoService.updateProductEntityById(prodEntity);
-		assertThat(prodEntity2.getEntityType().equalsIgnoreCase("Test"));
+		ProductEntityApiModel prodEntity2  = productEntityDaoService.updateProductEntityById(prodEntity);
+		assertThat(prodEntity2.getEntityType()).isEqualTo("Test");
 	}
 	
 	@Test
 	@MockitoSettings(strictness = Strictness.LENIENT)
-	public void deleteProductEntityById() {
+	 void deleteProductEntityById() {
 		
 		ProductEntity prodEntity2 = new ProductEntity();
 		prodEntity2.setProductEntityId(100);
@@ -122,18 +121,18 @@ class ProductEntityDaoServiceTest {
 		 willDoNothing().given(productEntityRepository).deleteById(100);
 		
 		String result  = productEntityDaoService.deleteEntityById(100);
-		assertThat(result.contains("Success"));
+		assertThat(result).contains("Success");
 	}
 	
 	@Test
 	@MockitoSettings(strictness = Strictness.LENIENT)
-	public void deleteProductEntityByIdNotFound() {
+	 void deleteProductEntityByIdNotFound() {
 		
 		
 		 willDoNothing().given(productEntityRepository).deleteById(100);
 		
 		String result  = productEntityDaoService.deleteEntityById(101);
-		assertThat(result.contains("Not Found"));
+		assertThat(result).contains("Not Found");
 	}
 	
 }

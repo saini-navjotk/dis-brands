@@ -86,6 +86,7 @@ public class LoggingServiceImpl extends MdcLogging implements LoggingService {
 	 * @param object
 	 * @return
 	 */
+	@Override()
 	protected Map<String, Object> from(Object object) {
 		ObjectMapper objectMapper = new ObjectMapper();
 		return objectMapper.convertValue(object, new TypeReference<Map<String, Object>>() {
@@ -99,16 +100,16 @@ public class LoggingServiceImpl extends MdcLogging implements LoggingService {
 		map.put(Constants.SERVICE_NAME, serviceName);
 		map.put(Constants.SERVICE_METHOD, serviceMethod);
 		setMDC(map);
-		if (object != null && !(object instanceof List)) {
-			LOGGER.info(Constants.PROCESSING_DETAILS+ httpMethod + " call for " + object.getClass().getName(),
+		if ( !(object instanceof List)) {
+			LOGGER.info(Constants.PROCESSING_DETAILS+ httpMethod + Constants.CALL_FOR + object.getClass().getName(),
 					kv("jsonPayload", from(object)));
-		} else if (object != null && object instanceof List) {
-			LOGGER.info(Constants.PROCESSING_DETAILS + httpMethod + " call for " + object.getClass().getName(),
+		} else if (object instanceof List) {
+			LOGGER.info(Constants.PROCESSING_DETAILS + httpMethod +  Constants.CALL_FOR + object.getClass().getName(),
 					kv("jsonPayload", writeListToJsonArray(object)));
 		}
 
 		else {
-			LOGGER.info(Constants.PROCESSING_DETAILS + httpMethod + " call for " + object.getClass().getName());
+			LOGGER.info(Constants.PROCESSING_DETAILS + httpMethod +  Constants.CALL_FOR + object.getClass().getName());
 		}
 	}
 

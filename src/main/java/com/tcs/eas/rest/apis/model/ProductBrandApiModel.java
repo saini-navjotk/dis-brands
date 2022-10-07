@@ -6,17 +6,12 @@ import javax.validation.constraints.Size;
 
 import io.swagger.annotations.ApiModel;
 
-//@Data
-//@NoArgsConstructor
-//@AllArgsConstructor
 @ApiModel
 public class ProductBrandApiModel {
 
-	// @Id
-	// @GeneratedValue(strategy = GenerationType.IDENTITY)
+	
 	private int brandId;
 
-	// @Column(unique = true)
 	@NotNull(message = "brand name field is missing *")
 	@Size(min = 2, message = "minimum 2 characters are required for brand name")
 	private String brandName;
@@ -40,14 +35,12 @@ public class ProductBrandApiModel {
 		this.brandOrigin = brandOrigin;
 		this.brandDescription = brandDescription;
 	}
-
+	
+	
 	public ProductBrandApiModel() {
-		// TODO Auto-generated constructor stub
+
 	}
 
-	/*
-	 * @Lob private byte[] brandLogo;
-	 */
 
 	public int getBrandId() {
 		return brandId;

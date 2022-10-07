@@ -15,7 +15,6 @@ import io.swagger.annotations.ApiModel;
 
 
 @Entity(name = "product_entity")
-@ApiModel
 public class ProductEntity {
 
 	@Id
@@ -140,4 +139,15 @@ public class ProductEntity {
 		
 	}
 
+	public ProductEntity(ProductEntityApiModel productEntityApiModel) {
+		this.entityType = productEntityApiModel.getEntityType();
+		this.entityName =  productEntityApiModel.getEntityName();
+		this.productEntityId =  productEntityApiModel.getProductEntityId();
+		this.entityDescription =  productEntityApiModel.getEntityDescription();
+		this.status = productEntityApiModel.getStatus();
+		this.createdBy = productEntityApiModel.getCreatedBy();
+		this.createdTimestamp = productEntityApiModel.getCreatedTimestamp();
+		this.updatedBy = productEntityApiModel.getUpdatedBy();
+		this.updatedTimestamp = productEntityApiModel.getUpdatedTimestamp();
+	}
 }

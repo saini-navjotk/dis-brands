@@ -114,7 +114,7 @@ class BrandServiceTest {
 		when(brandRepository.save(brand)).thenReturn(brand);
 		List<ProductBrandApiModel> result = brandDaoService.addBrands(brands);
 		
-		assertThat(result.size()).isGreaterThanOrEqualTo(0);
+		assertThat(result.size()).isNegative();
 	}
 
 	@Test
@@ -139,7 +139,7 @@ class BrandServiceTest {
 		 result = brandDaoService.deleteBrandById(1001);
 		}
 		catch(Exception e) {
-			assertThat(e.getMessage().contains("does not exist"));
+			assertThat(e.getMessage()).contains(Constants.DOES_NOT_EXIST.trim());
 		}
 		
 		
@@ -167,7 +167,7 @@ class BrandServiceTest {
 	
 	  @Test 
 	  @MockitoSettings(strictness = Strictness.LENIENT)
-	  public void updateBrandByIdIsNull() {
+	   void updateBrandByIdIsNull() {
 		  ProductBrandApiModel brand2 = null;
 	  
 	  when(brandRepository.findById(100)).thenReturn(Optional.of(brand));
@@ -176,7 +176,7 @@ class BrandServiceTest {
 	  try {
 	   brand2 = brandDaoService.updateBrandById(brand1);
 	  }catch(Exception e) {
-		  assertThat(e.getMessage().contains("does not exist"));
+		  assertThat(e.getMessage()).contains(Constants.DOES_NOT_EXIST.trim());
 	  }
 	  }
 }

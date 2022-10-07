@@ -32,6 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tcs.eas.rest.apis.db.ProductEntityDaoService;
 import com.tcs.eas.rest.apis.log.LoggingService;
 import com.tcs.eas.rest.apis.model.ProductEntity;
+import com.tcs.eas.rest.apis.model.ProductEntityApiModel;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -53,7 +54,7 @@ class ProductEntityControllerTest {
 	LoggingService loggingService;
 
 	// This object will be magically initialized by the initFields method below.
-	private JacksonTester<ProductEntity> jsonProductEntity;
+	private JacksonTester<ProductEntityApiModel> jsonProductEntity;
 	private JacksonTester<List<ProductEntity>> jsonProductEntityList;
 
 	@BeforeEach
@@ -72,12 +73,13 @@ class ProductEntityControllerTest {
 	@Test
 	void testGetAllProductEntity() throws Exception {
 		// given - precondition or setup
-		List<ProductEntity> productEntityList = new ArrayList<ProductEntity>();
-		ProductEntity productEntity1 = new ProductEntity();
+		List<ProductEntityApiModel> productEntityList = new ArrayList<ProductEntityApiModel>();
+		ProductEntityApiModel productEntity1 = new ProductEntityApiModel();
 		productEntity1.setEntityName("Brand");
 		productEntity1.setEntityType("Brand");
 		productEntity1.setStatus("A");
-		ProductEntity productEntity2 = new ProductEntity();
+		
+		ProductEntityApiModel productEntity2 = new ProductEntityApiModel();
 		productEntity1.setEntityName("Category");
 		productEntity1.setEntityType("Category");
 		productEntity1.setStatus("A");
@@ -98,7 +100,7 @@ class ProductEntityControllerTest {
 	@Test
 	void testGetProductEntityById() throws Exception {
 		// given - precondition or setup
-		ProductEntity productEntity1 = new ProductEntity();
+		ProductEntityApiModel productEntity1 = new ProductEntityApiModel();
 		productEntity1.setProductEntityId(100);
 		productEntity1.setEntityName("Brand");
 		productEntity1.setEntityType("Brand");
@@ -118,7 +120,7 @@ class ProductEntityControllerTest {
 	@Test
 	void testGetProductEntityByIdNotFound() throws Exception {
 		// given - precondition or setup
-		ProductEntity productEntity1 = new ProductEntity();
+		ProductEntityApiModel productEntity1 = new ProductEntityApiModel();
 		productEntity1.setProductEntityId(100);
 		productEntity1.setEntityName("Brand");
 		productEntity1.setEntityType("Brand");
@@ -136,7 +138,7 @@ class ProductEntityControllerTest {
 	@Test
 	void testAddProductEntity() throws Exception {
 		// given - precondition or setup
-		ProductEntity productEntity1 = new ProductEntity();
+		ProductEntityApiModel productEntity1 = new ProductEntityApiModel();
 		productEntity1.setProductEntityId(100);
 		productEntity1.setProductEntityId(100);
 		productEntity1.setEntityName("Brand");
@@ -159,7 +161,7 @@ class ProductEntityControllerTest {
 	void testUpdateProductEntityById() throws IOException, Exception {
 		// given - precondition or setup
 		
-		ProductEntity productEntity1 = new ProductEntity();
+		ProductEntityApiModel productEntity1 = new ProductEntityApiModel();
 		productEntity1.setProductEntityId(100);
 		productEntity1.setEntityName("Brand");
 		productEntity1.setEntityType("Brand");
@@ -182,14 +184,14 @@ class ProductEntityControllerTest {
 	void testUpdateProductEntityByIdNotFound() throws IOException, Exception {
 		// given - precondition or setup
 		
-		ProductEntity productEntity1 = new ProductEntity();
+		ProductEntityApiModel productEntity1 = new ProductEntityApiModel();
 		productEntity1.setProductEntityId(100);
 		productEntity1.setEntityName("Brand");
 		productEntity1.setEntityType("Brand");
 		productEntity1.setStatus("A");
 		
 
-		ProductEntity productEntity2 = new ProductEntity();
+		ProductEntityApiModel productEntity2 = new ProductEntityApiModel();
 		productEntity2.setProductEntityId(101);
 		productEntity2.setEntityName("Category");
 		productEntity2.setEntityType("Category");
@@ -210,7 +212,7 @@ class ProductEntityControllerTest {
 	void testDeleteProductEntityById() throws IOException, Exception {
 		// given - precondition or setup		
 		given(productEntityService.deleteEntityById(100)).willReturn("Successfull");
-		ProductEntity productEntity1 = new ProductEntity();
+		ProductEntityApiModel productEntity1 = new ProductEntityApiModel();
 		productEntity1.setProductEntityId(100);
 		productEntity1.setEntityName("Brand");
 		productEntity1.setEntityType("Brand");
