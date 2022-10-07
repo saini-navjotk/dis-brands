@@ -9,9 +9,7 @@ import javax.validation.constraints.Size;
 
 import io.swagger.annotations.ApiModel;
 
-//@Data
-//@NoArgsConstructor
-//@AllArgsConstructor
+
 @ApiModel
 public class ProductBrand {
 
@@ -35,7 +33,6 @@ public class ProductBrand {
 	private String brandDescription;
 
 	@Column
-//    @NotNull(message="created by field is missing")
 	private String createdBy;
 
 	public ProductBrand(int brandId,
@@ -51,12 +48,9 @@ public class ProductBrand {
 	}
 
 	public ProductBrand() {
-		// TODO Auto-generated constructor stub
+	
 	}
 
-	/*
-	 * @Lob private byte[] brandLogo;
-	 */
 
 	public int getBrandId() {
 		return brandId;

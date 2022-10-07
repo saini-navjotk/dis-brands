@@ -29,16 +29,15 @@ public class ServiceInterceptor extends MdcLogging implements HandlerInterceptor
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 
 			@Nullable ModelAndView modelAndView) throws Exception {
-		//System.out.println("---method executed---");
+		 loggingService.logResponse(request, response, handler);
 	}
 
 	@Override
 	public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object body, Exception ex)
 			throws Exception {
 
-		//System.out.println("---Request Completed---" + httpServletResponse.getStatus() + " " + httpServletRequest.getRequestURI());
-		// response.getWriter();
-		//loggingService.logResponse(httpServletRequest, httpServletResponse, body);
+		
+		loggingService.logResponse(httpServletRequest, httpServletResponse, body);
 	}
 
 	

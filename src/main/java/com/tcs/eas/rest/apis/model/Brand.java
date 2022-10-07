@@ -13,9 +13,7 @@ import javax.persistence.PrePersist;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-//@Data
-//@NoArgsConstructor
-//@AllArgsConstructor
+
 @Entity(name = "brand")
 public class Brand {
 
@@ -47,10 +45,6 @@ public class Brand {
 
 	@Column(name = "updatedtimestamp")
 	private Date updatedTimestamp;
-
-	/*
-	 * @Lob private byte[] brandLogo;
-	 */
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "brandorigin", referencedColumnName = "productEntityId")
@@ -131,7 +125,7 @@ public class Brand {
 
 	public Brand() {
 		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	/**

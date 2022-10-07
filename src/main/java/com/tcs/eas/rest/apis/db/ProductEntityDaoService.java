@@ -34,16 +34,15 @@ public class ProductEntityDaoService {
 		productEntity.setStatus("A");
 		productEntity.setEntityName(productEntity.getEntityName().toUpperCase());
 
-		ProductEntity entity = productEntityRepository.save(productEntity);
+		return productEntityRepository.save(productEntity);
 
-		return entity;
 	}
 
 	public List<ProductEntity> getAllProductEntity() {
 
-		List<ProductEntity> entityList = productEntityRepository.findAll();
+		return productEntityRepository.findAll();
 
-		return entityList;
+		
 	}
 
 	public ProductEntity getProductEntityById(int id) {
@@ -70,10 +69,10 @@ public class ProductEntityDaoService {
 
 	public ProductEntity updateProductEntityById(ProductEntity productEntity) {
 
-		Optional<ProductEntity> optionalEntity = productEntityRepository.findById(productEntity.getProductEntityId());
+		ProductEntity oldEntity = getProductEntityById(productEntity.getProductEntityId());
 
-		if (optionalEntity.isPresent()) {
-			ProductEntity oldEntity = optionalEntity.get();
+		if (oldEntity != null) {
+			
 			oldEntity.setEntityType(productEntity.getEntityType());
 			oldEntity.setEntityName(productEntity.getEntityName().toUpperCase());
 			oldEntity.setEntityDescription(productEntity.getEntityDescription());

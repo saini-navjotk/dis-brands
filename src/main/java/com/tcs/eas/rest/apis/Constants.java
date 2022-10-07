@@ -1,7 +1,7 @@
 package com.tcs.eas.rest.apis;
 
 
-public interface Constants {
+public class Constants {
 	
 	
 	/**
@@ -137,4 +137,12 @@ public interface Constants {
 	 * 
 	 */
 	public static final String NO_TRANSATION_ID = "NOT SET TRANSATION-ID";
+	
+	public static final String BRANDS = "brands";
+	
+	public static final String DOES_NOT_EXIST= " does not exist";
+	
+	public static final String PRODUCT_ENTITY = "productentity";
+	
+	public static final String PROCESSING_DETAILS = "Processing details: " ;
 }

@@ -22,7 +22,7 @@ import com.tcs.eas.rest.apis.utility.Utility;
 
 @ControllerAdvice
 @RestController
-public class CustomErrorHandler extends ResponseEntityExceptionHandler implements Constants {
+public class CustomErrorHandler extends ResponseEntityExceptionHandler {
 
 	/**
 	 * 
@@ -65,7 +65,7 @@ public class CustomErrorHandler extends ResponseEntityExceptionHandler implement
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		BindingResult bindingResult = ex.getBindingResult();
 		List<ObjectError> errors = bindingResult.getAllErrors();
-		String errorMessage = errors.size() > 0 ? errors.get(0).getDefaultMessage() : "error message not found";
+		String errorMessage = errors.isEmpty() ? errors.get(0).getDefaultMessage() : "error message not found";
 		return getResponseEntity(request, HttpStatus.BAD_REQUEST, ex, errorMessage);
 	}
 
@@ -79,8 +79,8 @@ public class CustomErrorHandler extends ResponseEntityExceptionHandler implement
 	private ResponseEntity<Object> getResponseEntity(WebRequest request, HttpStatus httpStatus, Exception ex,
 			String customErrorMessage) {
 		Map<String, String> headers = new HashMap<String, String>();
-		headers.put(TRANSACTION_ID, request.getHeader(TRANSACTION_ID));
-		headers.put(CORRELATION_ID, request.getHeader(CORRELATION_ID));
+		headers.put(Constants.TRANSACTION_ID, request.getHeader(Constants.TRANSACTION_ID));
+		headers.put(Constants.CORRELATION_ID, request.getHeader(Constants.CORRELATION_ID));
 		ErrorResponse errorResponse = new ErrorResponse(new Date(),
 				(customErrorMessage == null ? ex.getMessage() : customErrorMessage), request.getDescription(false));
 		return new ResponseEntity<Object>(errorResponse, Utility.getCustomResponseHeaders(headers), httpStatus);

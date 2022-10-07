@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tcs.eas.rest.apis.Constants;
 import com.tcs.eas.rest.apis.db.BrandDaoService;
 import com.tcs.eas.rest.apis.exception.BrandNotFound;
 import com.tcs.eas.rest.apis.log.LoggingService;
@@ -38,7 +39,7 @@ public class BrandController {
 	public ResponseEntity<List<ProductBrandApiModel>> getAllBrands(@RequestHeader Map<String, String> headers) {
 
 		ArrayList<ProductBrandApiModel> brands = (ArrayList<ProductBrandApiModel>) brandDaoService.getAllBrands();
-		loggingService.writeProcessLog("GET", "brands", "getAllBrands", brands);
+		loggingService.writeProcessLog(Constants.HTTP_METHOD_GET, Constants.BRANDS, "getAllBrands", brands);
 		return ResponseEntity.status(200).headers(Utility.getCustomResponseHeaders(headers)).body(brands);
 	}
 
@@ -49,10 +50,10 @@ public class BrandController {
 		ProductBrandApiModel brand = brandDaoService.getBrandById(id);
 
 		if (brand == null) {
-			throw new BrandNotFound("Brand id " + id + " does not exist");
+			throw new BrandNotFound("Brand id " + id + Constants.DOES_NOT_EXIST);
 		}
 
-		loggingService.writeProcessLog("GET", "brands", "getBrand by id", brand);
+		loggingService.writeProcessLog(Constants.HTTP_METHOD_GET, Constants.BRANDS, "getBrand by id", brand);
 		return ResponseEntity.status(200).headers(Utility.getCustomResponseHeaders(headers)).body(brand);
 	}
 
@@ -60,7 +61,7 @@ public class BrandController {
 	public ResponseEntity<List<ProductBrandApiModel>> addBrands(@Valid @RequestBody List<ProductBrandApiModel> brands,
 			@RequestHeader Map<String, String> headers) {
 
-		loggingService.writeProcessLog("POST", "brands", "addBrands", brands);
+		loggingService.writeProcessLog(Constants.HTTP_METHOD_POST, Constants.BRANDS, "addBrands", brands);
 		List<ProductBrandApiModel> brandList = brandDaoService.addBrands(brands);
 		 Utility.sendToKafka(brandList);
 
@@ -73,7 +74,7 @@ public class BrandController {
 
 		ProductBrandApiModel productBrand = brandDaoService.updateBrandById(brand);
 		 Utility.sendToKafka(productBrand);
-		loggingService.writeProcessLog("PUT", "brands", "update brand by id", brand);
+		loggingService.writeProcessLog(Constants.HTTP_METHOD_PUT, Constants.BRANDS, "update brand by id", brand);
 		return ResponseEntity.status(200).headers(Utility.getCustomResponseHeaders(headers)).body(productBrand);
 	}
 
@@ -81,7 +82,7 @@ public class BrandController {
 	public ResponseEntity<String> deleteBrandById(@PathVariable Integer id,
 			@RequestHeader Map<String, String> headers) {
 
-		loggingService.writeProcessLog("DELETE", "brands", "getAllBrands", id);
+		loggingService.writeProcessLog(Constants.HTTP_METHOD_DELETE, Constants.BRANDS, "getAllBrands", id);
 
 		String returnMessage = brandDaoService.deleteBrandById(id);
 

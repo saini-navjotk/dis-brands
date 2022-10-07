@@ -22,7 +22,7 @@ import com.tcs.eas.rest.apis.model.ProductBrandApiModel;
  * @author 44745
  *
  */
-public class Utility implements Constants {
+public class Utility extends Constants {
 	/**
 	 * 
 	 * @param object

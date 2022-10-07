@@ -34,7 +34,7 @@ import com.tcs.eas.rest.apis.model.ProductEntity;
 //@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-public class BrandServiceTest {
+class BrandServiceTest {
 	@InjectMocks
 	private BrandDaoService brandDaoService;
 
@@ -50,8 +50,7 @@ public class BrandServiceTest {
 
 	@Autowired
 	LoggingService loggingService;
-	// @Autowired
-	// private TestEntityManager entityManager;
+
 
 	@BeforeEach
 	public void setup() {
@@ -62,6 +61,7 @@ public class BrandServiceTest {
 		origin.setEntityType("Brand");
 		productEntityRepository.save(origin);
 		brand1 = new ProductBrandApiModel(100, "Apple", "USA", "Goood mobile brands");
+		
 		brand = new Brand();
 		brand.setBrandName("Apple");
 		brand.setBrandOrigin( origin);
@@ -76,7 +76,6 @@ public class BrandServiceTest {
 	@Test
 	void getAllBrands() {
 
-		// Brand brand1 =new Brand( "Apple", origin, "Test Brand", "admin", "admin");
 		Brand brand2 = new Brand("Samsung", origin,  "Test Brand" , "admin", "admin");
 
 		List<Brand> brands = new ArrayList<Brand>();
@@ -84,29 +83,14 @@ public class BrandServiceTest {
 		brands.add(brand);
 		brands.add(brand2);
 
-		// Iterable <Brand>tutorials = brandRepository.findAll();
 
 		when(brandRepository.findAll()).thenReturn(brands);
 		// test
 		List<ProductBrandApiModel> brandList = brandDaoService.getAllBrands();
 		loggingService.writeProcessLog("GET", "brands", "getAllBrands", brandList);
-		assertEquals(brandList.size(), 2);
+		assertEquals(2, brandList.size());
 
-		/*
-		 * List<ProductBrandApiModel> brands = new ArrayList<ProductBrandApiModel>();
-		 * ProductBrandApiModel brand1 = new ProductBrandApiModel(100, "Apple", "Brand",
-		 * "Test Brand"); ProductBrandApiModel brand2 = new ProductBrandApiModel(101,
-		 * "Samsung", "Brand", "Test Brand"); ProductBrandApiModel brand3 = new
-		 * ProductBrandApiModel(101, "Samsung", "Brand", "Test Brand");
-		 * brands.add(brand1); brands.add(brand2); brands.add(brand3);
-		 * 
-		 * 
-		 * when(brandDaoService.getAllBrands()).thenReturn(brands);
-		 * 
-		 * //test List<ProductBrandApiModel> brandList = brandDaoService.getAllBrands();
-		 * assertEquals(3, brandList.size()); verify(brandDaoService,
-		 * times(1)).getAllBrands();
-		 */
+		
 	}
 
 	@Test
@@ -120,7 +104,7 @@ public class BrandServiceTest {
 
 	@Test
 	@MockitoSettings(strictness = Strictness.LENIENT)
-	public void addBrand() {
+	 void addBrand() {
 		productEntityRepository.save(origin);
 		when(productEntityRepository.findByEntityNameAndEntityType(brand.getBrandOrigin().getEntityName(), null))
 				.thenReturn(origin);
@@ -129,25 +113,25 @@ public class BrandServiceTest {
 		brands.add(brand1);
 		when(brandRepository.save(brand)).thenReturn(brand);
 		List<ProductBrandApiModel> result = brandDaoService.addBrands(brands);
-		// loggingService.writeProcessLog("POST", "brands", "addBrands", brands);
-		assertThat(result.size() > 0);
+		
+		assertThat(result.size()).isGreaterThanOrEqualTo(0);
 	}
 
 	@Test
 	@MockitoSettings(strictness = Strictness.LENIENT)
-	public void deleteBrandById() {
+	 void deleteBrandById() {
 		when(brandRepository.findById(1000)).thenReturn(Optional.of(brand));
 	
 		willDoNothing().given(brandRepository).deleteById(1000);
 
 		String result = brandDaoService.deleteBrandById(1000);
 		
-		assertThat(result.contains("Success"));
+		assertThat(result).contains("Success");
 	}
 
 	@Test
 	@MockitoSettings(strictness = Strictness.LENIENT)
-	public void deleteBrandByIdNotFound() {
+	 void deleteBrandByIdNotFound() {
 		String result = null;
 		when(brandRepository.findById(1000)).thenReturn(Optional.of(brand));
 		willDoNothing().given(brandRepository).deleteById(1000);
@@ -162,7 +146,8 @@ public class BrandServiceTest {
 	}
 
 	@Test
-	public void updateBrandById() {
+	@MockitoSettings(strictness = Strictness.LENIENT)
+	 void updateBrandById() {
 		
 		brand1 = new ProductBrandApiModel(100, "Apple", "USA", "Goood mobile brands");
 		brand = new Brand(100, "Apple", origin, "Test Brand", "admin", "admin");
@@ -170,18 +155,28 @@ public class BrandServiceTest {
 		when(productEntityRepository.findByEntityNameAndEntityType(brand.getBrandOrigin().getEntityName(), null))
 		.thenReturn(origin);
 		when(brandRepository.findById(100)).thenReturn(Optional.of(brand));
+		
 		when(brandRepository.save(brand)).thenReturn(brand);
+		
 		brand1.setBrandName("Apple1");
 		ProductBrandApiModel brand2 = brandDaoService.updateBrandById(brand1);
 		loggingService.writeProcessLog("UPDATE", "brands", "updateBrands", brand2);
-		assertThat(brand2.getBrandName().equalsIgnoreCase("Apple1"));
+		assertThat(brand2.getBrandName()).isEqualTo("Apple1");
 	}
 
-	/*
-	 * @Test public void updateBrandByIdIsNull() {
-	 * when(brandRepository.findById(100)).thenReturn(Optional.of(brand));
-	 * when(brandRepository.save(brand)).thenReturn(brand); brand1.setBrandId(9865);
-	 * ProductBrandApiModel brand2 = brandDaoService.updateBrandById(brand1);
-	 * assertThat(brand2.getBrandName().equalsIgnoreCase("Apple1")); }
-	 */
+	
+	  @Test 
+	  @MockitoSettings(strictness = Strictness.LENIENT)
+	  public void updateBrandByIdIsNull() {
+		  ProductBrandApiModel brand2 = null;
+	  
+	  when(brandRepository.findById(100)).thenReturn(Optional.of(brand));
+	  when(brandRepository.save(brand)).thenReturn(brand); 
+	  brand1.setBrandId(9865);
+	  try {
+	   brand2 = brandDaoService.updateBrandById(brand1);
+	  }catch(Exception e) {
+		  assertThat(e.getMessage().contains("does not exist"));
+	  }
+	  }
 }

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tcs.eas.rest.apis.Constants;
 import com.tcs.eas.rest.apis.utility.Utility;
 
 import lombok.extern.java.Log;
@@ -32,42 +33,39 @@ public class LoggingServiceImpl extends MdcLogging implements LoggingService {
 	@Override
 	public void logRequest(HttpServletRequest request, Object body) {
 		Map<String, String> map = new HashMap<>();
-		// UUID uuid = UUID.randomUUID();
-		// String correlationID = uuid.toString();
-		String transationId = request.getHeader(TRANSACTION_ID);
+		String transationId = request.getHeader(Constants.TRANSACTION_ID);
 		if (transationId == null) {
-			transationId = NO_TRANSATION_ID;
+			transationId = Constants.NO_TRANSATION_ID;
 		}
-		map.put(TRANSACTION_ID, transationId);
-		map.put(HTTP_METHOD, request.getMethod());
-		map.put(REQUEST_URI, request.getRequestURI());
-		map.put(HTTP_PROTOCOL, request.getProtocol());
-		map.put(HEADER_CONTENT_TYPE, request.getContentType());
-		map.put(CLIENT_IP, Utility.getClientIp(request));
+		map.put(Constants.TRANSACTION_ID, transationId);
+		map.put(Constants.HTTP_METHOD, request.getMethod());
+		map.put(Constants.REQUEST_URI, request.getRequestURI());
+		map.put(Constants.HTTP_PROTOCOL, request.getProtocol());
+		map.put(Constants.HEADER_CONTENT_TYPE, request.getContentType());
+		map.put(Constants.CLIENT_IP, Utility.getClientIp(request));
 		Map<String, String> httpHeadersMap = Utility.getRequestHeaderValues(request);
 		setMDC(map);
 		LOGGER.info("Request details", StructuredArguments.entries(httpHeadersMap));
 		clearMDC();
-		MDC.put(TRANSACTION_ID, transationId);
+		MDC.put(Constants.TRANSACTION_ID, transationId);
 	}
 
 	@Override
 	public void logResponse(HttpServletRequest request, HttpServletResponse httpServletResponse, Object body) {
 		Map<String, String> map = new HashMap<>();
-		map.put(HTTP_METHOD, request.getMethod());
-		map.put(REQUEST_URI, request.getRequestURI());
-		map.put(HTTP_PROTOCOL, request.getProtocol());
-		map.put(HTTP_STATUS, httpServletResponse.getStatus() + "");
+		map.put(Constants.HTTP_METHOD, request.getMethod());
+		map.put(Constants.REQUEST_URI, request.getRequestURI());
+		map.put(Constants.HTTP_PROTOCOL, request.getProtocol());
+		map.put(Constants.HTTP_STATUS, httpServletResponse.getStatus() + "");
 		setMDC(map);
 		LOGGER.info("Response details", httpServletResponse.getStatus());
-		// LOGGER.info("Response details: ", kv("jsonPayload", from(body)));
-		// Map<String, Object> map1 = from(body);
 		clearMDC();
 	}
 
 	/**
 	 * 
 	 */
+	@Override()
 	public void clearMDC() {
 		MDC.clear();
 	}
@@ -76,6 +74,7 @@ public class LoggingServiceImpl extends MdcLogging implements LoggingService {
 	 * 
 	 * @param map
 	 */
+	@Override
 	protected void setMDC(Map<String, String> map) {
 		for (Map.Entry<String, String> entry : map.entrySet()) {
 			MDC.put(entry.getKey(), entry.getValue());
@@ -95,21 +94,21 @@ public class LoggingServiceImpl extends MdcLogging implements LoggingService {
 
 	public void writeProcessLog(String httpMethod, String serviceName, String serviceMethod, Object object) {
 		Map<String, String> map = new HashMap<>();
-		map.put(TRANSACTION_ID, MDC.get(TRANSACTION_ID));
-		map.put(HTTP_METHOD, httpMethod);
-		map.put(SERVICE_NAME, serviceName);
-		map.put(SERVICE_METHOD, serviceMethod);
+		map.put(Constants.TRANSACTION_ID, MDC.get(Constants.TRANSACTION_ID));
+		map.put(Constants.HTTP_METHOD, httpMethod);
+		map.put(Constants.SERVICE_NAME, serviceName);
+		map.put(Constants.SERVICE_METHOD, serviceMethod);
 		setMDC(map);
 		if (object != null && !(object instanceof List)) {
-			LOGGER.info("Processing details: " + httpMethod + " call for " + object.getClass().getName(),
+			LOGGER.info(Constants.PROCESSING_DETAILS+ httpMethod + " call for " + object.getClass().getName(),
 					kv("jsonPayload", from(object)));
 		} else if (object != null && object instanceof List) {
-			LOGGER.info("Processing details: " + httpMethod + " call for " + object.getClass().getName(),
+			LOGGER.info(Constants.PROCESSING_DETAILS + httpMethod + " call for " + object.getClass().getName(),
 					kv("jsonPayload", writeListToJsonArray(object)));
 		}
 
 		else {
-			LOGGER.info("Processing details: " + httpMethod + " call for " + object.getClass().getName());
+			LOGGER.info(Constants.PROCESSING_DETAILS + httpMethod + " call for " + object.getClass().getName());
 		}
 	}
 
@@ -133,7 +132,7 @@ public class LoggingServiceImpl extends MdcLogging implements LoggingService {
 
 	@Override
 	public void logError(String errorMessage) {
-		LOGGER.error("Error: " + errorMessage, HTTP_STATUS_500);
+		LOGGER.error("Error: " + errorMessage, Constants.HTTP_STATUS_500);
 	}
 
 }

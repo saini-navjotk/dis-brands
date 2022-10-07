@@ -13,9 +13,7 @@ import javax.validation.constraints.Size;
 
 import io.swagger.annotations.ApiModel;
 
-//@Data
-//@NoArgsConstructor
-//@AllArgsConstructor
+
 @Entity(name = "product_entity")
 @ApiModel
 public class ProductEntity {
@@ -34,7 +32,6 @@ public class ProductEntity {
 	@Column(unique = false, name = "entityname")
 	private String entityName;
 
-	// @NotNull(message = "entity description field is missing")
 	@Size(min = 5, message = "minimum 5 characters are required for brand description")
 	@Column(name = "enitydescription")
 	private String entityDescription;
@@ -140,7 +137,7 @@ public class ProductEntity {
 	 */
 	public ProductEntity() {
 		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tcs.eas.rest.apis.Constants;
 import com.tcs.eas.rest.apis.db.ProductEntityDaoService;
 import com.tcs.eas.rest.apis.exception.BrandNotFound;
 import com.tcs.eas.rest.apis.log.LoggingService;
@@ -38,7 +39,7 @@ public class ProductEntityController {
 	public ResponseEntity<List<ProductEntity>> getAllProductEntity(@RequestHeader Map<String, String> headers) {
 
 		ArrayList<ProductEntity> entities = (ArrayList<ProductEntity>) productEntityDaoService.getAllProductEntity();
-		loggingService.writeProcessLog("GET", "productentity", "getAllProductEntity", entities);
+		loggingService.writeProcessLog(Constants.HTTP_METHOD_GET, Constants.PRODUCT_ENTITY, "getAllProductEntity", entities);
 		return ResponseEntity.status(200).headers(Utility.getCustomResponseHeaders(headers)).body(entities);
 	}
 
@@ -49,10 +50,10 @@ public class ProductEntityController {
 		ProductEntity entity = productEntityDaoService.getProductEntityById(id);
 
 		if (entity == null) {
-			throw new BrandNotFound("Entity id " + id + " does not exist");
+			throw new BrandNotFound("Entity id " + id + Constants.DOES_NOT_EXIST);
 		}
 
-		loggingService.writeProcessLog("GET", "productentity", "getProductEntityById by id", entity);
+		loggingService.writeProcessLog(Constants.HTTP_METHOD_GET, Constants.PRODUCT_ENTITY, "getProductEntityById by id", entity);
 		return ResponseEntity.status(200).headers(Utility.getCustomResponseHeaders(headers)).body(entity);
 	}
 
@@ -72,10 +73,10 @@ public class ProductEntityController {
 		ProductEntity productEntity = productEntityDaoService.getProductEntityById(entity.getProductEntityId());
 
 		if (productEntity == null) {
-			throw new BrandNotFound("productEntity id " + entity.getProductEntityId() + " does not exist");
+			throw new BrandNotFound("productEntity id " + entity.getProductEntityId() + Constants.DOES_NOT_EXIST);
 		}
 
-		loggingService.writeProcessLog("PUT", "productentity", "updateProductEntityById", productEntity);
+		loggingService.writeProcessLog(Constants.HTTP_METHOD_PUT, Constants.PRODUCT_ENTITY, "updateProductEntityById", productEntity);
 		return ResponseEntity.status(200).headers(Utility.getCustomResponseHeaders(headers))
 				.body(productEntityDaoService.updateProductEntityById(entity));
 	}
@@ -87,10 +88,10 @@ public class ProductEntityController {
 		ProductEntity entity = productEntityDaoService.getProductEntityById(id);
 
 		if (entity == null) {
-			throw new BrandNotFound("Product Entity id " + id + " does not exist");
+			throw new BrandNotFound("Product Entity id " + id + Constants.DOES_NOT_EXIST);
 		}
 
-		loggingService.writeProcessLog("DELETE", "productentity", "deleteProductEntityById", entity);
+		loggingService.writeProcessLog(Constants.HTTP_METHOD_DELETE, Constants.PRODUCT_ENTITY, "deleteProductEntityById", entity);
 		return ResponseEntity.ok().headers(Utility.getCustomResponseHeaders(headers))
 				.body(productEntityDaoService.deleteEntityById(id));
 	}

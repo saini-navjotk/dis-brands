@@ -25,7 +25,7 @@ import com.tcs.eas.rest.apis.db.ProductEntityRepository;
 import com.tcs.eas.rest.apis.model.ProductEntity;
 
 @ExtendWith(MockitoExtension.class)
-public class ProductEntityDaoServiceTest {
+class ProductEntityDaoServiceTest {
 
 	@InjectMocks
 	private ProductEntityDaoService productEntityDaoService;

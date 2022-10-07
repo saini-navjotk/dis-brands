@@ -116,10 +116,17 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-			 <groupId>org.tcs.dis</groupId>
-    		<artifactId>dis-kafka</artifactId>		
-    		<version>1.0-SNAPSHOT</version>
+			<groupId>org.tcs.dis</groupId>
+			<artifactId>dis-kafka</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.sonarsource.scanner.maven/sonar-maven-plugin -->
+<dependency>
+    <groupId>org.sonarsource.scanner.maven</groupId>
+    <artifactId>sonar-maven-plugin</artifactId>
+    <version>3.8.0.2131</version>
+</dependency>
+		
 	</dependencies>
 	<build>
 		<plugins>
@@ -129,6 +136,19 @@
 				<configuration>
 					<executable>true</executable>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.sonarsource.scanner.maven</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>3.3.0.603</version>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>sonar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 

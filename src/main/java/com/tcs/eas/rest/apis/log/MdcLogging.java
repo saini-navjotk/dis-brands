@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tcs.eas.rest.apis.Constants;
 
 
-public abstract class MdcLogging implements Constants {
+public abstract class MdcLogging  {
 
 	/**
 	 * 
@@ -42,10 +42,10 @@ public abstract class MdcLogging implements Constants {
 
 	protected void writeProcessLog(String httpMethod, String serviceName, String serviceMethod) {
 		Map<String, String> map = new HashMap<>();
-		map.put(CORRELATION_ID, MDC.get(CORRELATION_ID));
-		map.put(HTTP_METHOD, httpMethod);
-		map.put(SERVICE_NAME, serviceName);
-		map.put(SERVICE_METHOD, serviceMethod);
+		map.put(Constants.CORRELATION_ID, MDC.get(Constants.CORRELATION_ID));
+		map.put(Constants.HTTP_METHOD, httpMethod);
+		map.put(Constants.SERVICE_NAME, serviceName);
+		map.put(Constants.SERVICE_METHOD, serviceMethod);
 		setMDC(map);
 	}
 }
