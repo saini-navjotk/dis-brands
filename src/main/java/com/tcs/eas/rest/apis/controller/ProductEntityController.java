@@ -68,7 +68,7 @@ public class ProductEntityController {
 	}
 
 	@PutMapping
-	public ResponseEntity<ProductEntityApiModel> updateProductEntityById(@Valid @RequestBody ProductEntity entity,
+	public ResponseEntity<ProductEntityApiModel> updateProductEntityById(@Valid @RequestBody ProductEntityApiModel entity,
 			@RequestHeader Map<String, String> headers) {
 
 		ProductEntityApiModel productEntity = productEntityDaoService.getProductEntityById(entity.getProductEntityId());

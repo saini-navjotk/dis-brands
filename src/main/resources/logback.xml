@@ -25,8 +25,6 @@
 			<customFields>{"appname":"dis-brands"}</customFields>
 			<provider
 				class="net.logstash.logback.composite.loggingevent.LoggingEventPatternJsonProvider">
-				<!-- <pattern> { "message": "%replace(%msg){'Processing','**********','call','+++++'}" 
-					} </pattern> -->
 			</provider>
 		</encoder>
 	</appender>

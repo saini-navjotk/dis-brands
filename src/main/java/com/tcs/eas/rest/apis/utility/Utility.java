@@ -22,7 +22,7 @@ import com.tcs.eas.rest.apis.model.ProductBrandApiModel;
  * @author 44745
  *
  */
-public class Utility extends Constants {
+public class Utility {
 	/**
 	 * 
 	 * @param object
@@ -43,7 +43,7 @@ public class Utility extends Constants {
 		Map<String, String> map = new HashMap<>();
 		Enumeration<String> headerNames = request.getHeaderNames();
 		while (headerNames.hasMoreElements()) {
-			String key = (String) headerNames.nextElement();
+			String key = headerNames.nextElement();
 			String value = request.getHeader(key);
 			map.put(key, value);
 		}
@@ -74,27 +74,15 @@ public class Utility extends Constants {
 	public static HttpHeaders getCustomResponseHeaders(Map<String, String> headers) {
 		// setting required response headers
 		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.set(TRANSACTION_ID,
-				headers.get(TRANSACTION_ID) == null ? NO_TRANSATION_ID : headers.get(TRANSACTION_ID));
-		String correlationId = headers.get(CORRELATION_ID);
+		responseHeaders.set(Constants.TRANSACTION_ID,
+				headers.get(Constants.TRANSACTION_ID) == null ? Constants.NO_TRANSATION_ID : headers.get(Constants.TRANSACTION_ID));
+		String correlationId = headers.get(Constants.CORRELATION_ID);
 		if (correlationId != null) {
-			responseHeaders.set(CORRELATION_ID, correlationId);
+			responseHeaders.set(Constants.CORRELATION_ID, correlationId);
 		}
 
 		return responseHeaders;
 	}
 	
-	public static void sendToKafka(ProductBrandApiModel brand) {
-		KafkaPublish publish = new KafkaPublish();
-		ObjectMapper mapper = new ObjectMapper();
-		publish.send(DisEntity.BRANDS, mapper.convertValue(brand, JsonNode.class));
-	}
-
-	public static void sendToKafka(List<ProductBrandApiModel> brandList) {
-		KafkaPublish publish = new KafkaPublish();
-		ObjectMapper mapper = new ObjectMapper();
-		publish.send(DisEntity.BRANDS, mapper.convertValue(brandList, JsonNode.class));
-		
-	}
 
 }

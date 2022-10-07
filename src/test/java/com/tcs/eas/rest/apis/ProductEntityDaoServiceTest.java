@@ -75,7 +75,7 @@ class ProductEntityDaoServiceTest {
 		//test
 	  	List<ProductEntityApiModel> list = productEntityDaoService.getAllProductEntity();
 	  	assertEquals(2, list.size());
-       assertThat(list.get(1).getEntityName().equalsIgnoreCase("Brand"));
+       assertThat(list.get(1).getEntityName()).isEqualToIgnoringCase("Brand");
 	}
 	
 	@Test

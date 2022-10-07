@@ -1,6 +1,8 @@
 package com.tcs.eas.rest.apis.utility;
 
 import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Random;
 
 import org.hibernate.HibernateException;
@@ -13,21 +15,28 @@ import org.hibernate.id.IdentifierGenerator;
  *
  */
 public class KeyGenerator implements IdentifierGenerator {
-
+	
 	@Override
 	public Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException {
-		// TODO Auto-generated method stub
-		System.out.println("random string=");
-		return getRandomNumberString();
+		
+		
+			try {
+				return getRandomNumberString();
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+				
+			}
+			return session;
+		
 	}
 
 	/**
 	 * 
 	 * @return
+	 * @throws NoSuchAlgorithmException 
 	 */
-	private int getRandomNumberString() {
-		Random rnd = new Random();
-		System.out.println("random no=" + rnd);
+	private int getRandomNumberString() throws NoSuchAlgorithmException {
+		Random rnd = SecureRandom.getInstanceStrong();
 		return rnd.nextInt(99999999);
 	}
 }
