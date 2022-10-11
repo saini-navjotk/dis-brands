@@ -30,7 +30,7 @@ steps:
     mavenPomFile: 'pom.xml'
     goals: 'install:install-file'
     options: '-Dfile=./KafkaService.jar -DgroupId=org.tcs.dis -DartifactId=dis-kafka -Dversion=1.0-SNAPSHOT -Dpackaging=jar'
-    publishJUnitResults: false
+    publishJUnitResults: true
     javaHomeOption: 'JDKVersion'
     mavenVersionOption: 'Default'
     mavenAuthenticateFeed: false
